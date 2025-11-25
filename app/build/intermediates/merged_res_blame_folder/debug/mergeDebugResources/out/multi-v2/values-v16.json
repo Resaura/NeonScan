@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.neonscan.app-mergeDebugResources-87:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\c2a75ea32145af67ab43a84a82c2519c\\transformed\\appcompat-1.6.1\\res\\values-v16\\values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    }
+                }
+            ]
+        }
+    ]
+}
