@@ -9,6 +9,8 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import android.content.Intent
+import android.app.Activity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -106,7 +108,8 @@ fun ScanScreen(
                     .fillMaxSize(),
                 verticalAlignment = Alignment.Bottom
             ) {
-                IconButton(onClick = { /* TODO: galerie */ }) {
+                val galleryContext = context
+                IconButton(onClick = { openGallery(galleryContext) }) {
                     Icon(Icons.Filled.PhotoLibrary, contentDescription = "Galerie", tint = NeonApple)
                 }
                 Spacer(Modifier.weight(1f))
@@ -172,6 +175,8 @@ private fun CameraPreview(
         modifier = Modifier.fillMaxSize(),
         factory = {
             val previewView = PreviewView(context)
+            previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
+            previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
             cameraProviderFuture.addListener({
                 val cameraProvider = cameraProviderFuture.get()
@@ -219,5 +224,18 @@ private fun DocumentOverlay() {
             size.height - 120f,
             paint
         )
+    }
+}
+
+private fun openGallery(context: android.content.Context) {
+    val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+        type = "image/*"
+    }
+    val chooser = Intent.createChooser(intent, "Choisir une image")
+    if (context is Activity) {
+        context.startActivity(chooser)
+    } else {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(chooser)
     }
 }

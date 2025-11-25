@@ -81,8 +81,12 @@ fun HomeScreen(navController: NavController, repo: DocumentRepository) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("scan") }) {
-                Icon(Icons.Default.CameraAlt, contentDescription = "Scan", tint = NeonApple)
+            FloatingActionButton(
+                onClick = { navController.navigate("scan") },
+                containerColor = NeonApple,
+                contentColor = NeonBlack
+            ) {
+                Icon(Icons.Default.CameraAlt, contentDescription = "Scan")
             }
         },
         bottomBar = { AdMobBanner(adUnitId = com.neonscan.util.AdsManager.TEST_BANNER) }
