@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.nativeCanvas
 import android.graphics.Paint
 import androidx.compose.ui.platform.LocalContext
@@ -222,14 +223,27 @@ private fun CameraPreview(
 @Composable
 private fun DocumentOverlay() {
     Canvas(modifier = Modifier.fillMaxSize()) {
+        // default guide rectangle centered
+        val rectWidth = size.width * 0.8f
+        val rectHeight = size.height * 0.5f
+        val left = (size.width - rectWidth) / 2
+        val top = (size.height - rectHeight) / 2
+        val right = left + rectWidth
+        val bottom = top + rectHeight
+        drawRect(
+            color = NeonApple,
+            topLeft = Offset(left, top),
+            size = androidx.compose.ui.geometry.Size(rectWidth, rectHeight),
+            style = Stroke(width = 3.dp.toPx())
+        )
         val paint = Paint().apply {
-            color = android.graphics.Color.DKGRAY
-            textSize = 38f
+            color = android.graphics.Color.LTGRAY
+            textSize = 32f
         }
         drawContext.canvas.nativeCanvas.drawText(
             "Cadrez le document",
-            size.width / 3,
-            size.height - 120f,
+            left + 20f,
+            top - 20f,
             paint
         )
     }
