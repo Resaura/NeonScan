@@ -76,11 +76,6 @@ fun SettingsScreen(navController: NavController, settingsRepository: SettingsRep
                 onSelect = vm::setFormat
             )
             Spacer(Modifier.height(8.dp))
-            Text("Fréquence des pubs interstitielles", color = Color.White)
-            FrequencyRow(
-                selected = settings.interstitialFrequency,
-                onSelect = vm::setFrequency
-            )
             Spacer(Modifier.height(12.dp))
             NeonSecondaryButton(text = "Fermer", onClick = { navController.popBackStack() }, modifier = Modifier.fillMaxWidth())
         }
@@ -115,19 +110,6 @@ private fun FormatRow(selected: DocumentFormat, onSelect: (DocumentFormat) -> Un
             ) {
                 RadioButton(selected = selected == f, onClick = { onSelect(f) }, colors = RadioButtonDefaults.colors(selectedColor = NeonApple))
                 Text(f.name, color = if (selected == f) NeonApple else NeonGray)
-            }
-        }
-    }
-}
-
-@Composable
-private fun FrequencyRow(selected: Int, onSelect: (Int) -> Unit) {
-    val options = listOf(1, 3, 5)
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-        options.forEach { freq ->
-            Row(modifier = Modifier.clickable { onSelect(freq) }) {
-                RadioButton(selected = selected == freq, onClick = { onSelect(freq) }, colors = RadioButtonDefaults.colors(selectedColor = NeonApple))
-                Text("$freq scans", color = if (selected == freq) NeonApple else NeonGray, modifier = Modifier.padding(start = 4.dp))
             }
         }
     }

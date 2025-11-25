@@ -18,7 +18,7 @@ object AdsManager {
     const val TEST_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712"
     private var interstitial: InterstitialAd? = null
     private var counter = 0
-    var frequency: Int = 3
+    var frequency: Int = 2
 
     fun maybeShowInterstitial(activity: Activity, force: Boolean = false) {
         counter++

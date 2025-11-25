@@ -45,6 +45,47 @@ class OptionsViewModel(
         }
     }
 
+    fun updateExisting(doc: DocumentEntity, bitmap: Bitmap, targetFormat: DocumentFormat, onSaved: (DocumentEntity) -> Unit) {
+        viewModelScope.launch {
+            val now = System.currentTimeMillis()
+            val updated = when (targetFormat) {
+                doc.primaryFormat -> {
+                    val dest = File(doc.filePathPrimary)
+                    if (targetFormat == DocumentFormat.PDF) {
+                        repo.exportToPdf(bitmap, dest)
+                    } else {
+                        repo.exportToJpg(bitmap, dest)
+                    }
+                    doc.copy(title = title, updatedAt = now)
+                }
+                DocumentFormat.PDF -> {
+                    val dest = fileManager.newFile("${doc.id}_p1", "pdf")
+                    repo.exportToPdf(bitmap, dest)
+                    fileManager.deleteFile(doc.filePathPrimary)
+                    doc.copy(
+                        title = title,
+                        updatedAt = now,
+                        primaryFormat = DocumentFormat.PDF,
+                        filePathPrimary = dest.absolutePath
+                    )
+                }
+                DocumentFormat.JPG, DocumentFormat.OCR -> { // OCR not implemented, fallback to JPG
+                    val dest = fileManager.newFile("${doc.id}_p1", "jpg")
+                    repo.exportToJpg(bitmap, dest)
+                    fileManager.deleteFile(doc.filePathPrimary)
+                    doc.copy(
+                        title = title,
+                        updatedAt = now,
+                        primaryFormat = DocumentFormat.JPG,
+                        filePathPrimary = dest.absolutePath
+                    )
+                }
+            }
+            repo.saveDocument(updated)
+            onSaved(updated)
+        }
+    }
+
     private fun defaultName(): String =
         "Scan_" + SimpleDateFormat("yyyy-MM-dd_HH-mm", Locale.getDefault()).format(Date())
 }

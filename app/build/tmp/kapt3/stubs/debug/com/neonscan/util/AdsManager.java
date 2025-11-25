@@ -9,7 +9,7 @@ public final class AdsManager {
     @org.jetbrains.annotations.Nullable()
     private static com.google.android.gms.ads.interstitial.InterstitialAd interstitial;
     private static int counter = 0;
-    private static int frequency = 3;
+    private static int frequency = 2;
     @org.jetbrains.annotations.NotNull()
     public static final com.neonscan.util.AdsManager INSTANCE = null;
     

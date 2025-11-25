@@ -126,6 +126,7 @@ private fun DocumentRow(
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     var renameDialog by remember { mutableStateOf(false) }
+    var deleteDialog by remember { mutableStateOf(false) }
     var newTitle by remember { mutableStateOf(doc.title) }
 
     NeonCard(
@@ -161,7 +162,7 @@ private fun DocumentRow(
                 })
                 DropdownMenuItem(text = { Text("Supprimer") }, leadingIcon = { Icon(Icons.Default.Delete, null) }, onClick = {
                     menuExpanded = false
-                    onDelete()
+                    deleteDialog = true
                 })
                 DropdownMenuItem(text = { Text("Ouvrir") }, leadingIcon = { Icon(Icons.Default.CameraAlt, null) }, onClick = {
                     menuExpanded = false
@@ -192,6 +193,24 @@ private fun DocumentRow(
                     TextField(value = newTitle, onValueChange = { newTitle = it }, singleLine = true)
                 }
             },
+            containerColor = NeonBlack
+        )
+    }
+    if (deleteDialog) {
+        AlertDialog(
+            onDismissRequest = { deleteDialog = false },
+            confirmButton = {
+                NeonPrimaryButton(text = "Supprimer", onClick = {
+                    deleteDialog = false
+                    onDelete()
+                })
+            },
+            dismissButton = {
+                IconButton(onClick = { deleteDialog = false }) {
+                    Icon(Icons.Default.Close, contentDescription = "Fermer", tint = NeonApple)
+                }
+            },
+            text = { Text("Supprimer ce scan ?", color = Color.White) },
             containerColor = NeonBlack
         )
     }
