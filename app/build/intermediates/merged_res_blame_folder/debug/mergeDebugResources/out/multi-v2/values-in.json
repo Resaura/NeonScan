@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.neonscan.app-mergeDebugResources-87:/values-in/values-in.xml",
+            "outputFile": "com.neonscan.app-mergeDebugResources-90:/values-in/values-in.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\d4bf70c618423c9d9f28bf8cde4b3638\\transformed\\play-services-ads-23.1.0\\res\\values-in\\values.xml",

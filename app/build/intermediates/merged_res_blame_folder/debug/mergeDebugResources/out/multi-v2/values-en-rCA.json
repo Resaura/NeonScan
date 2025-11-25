@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.neonscan.app-mergeDebugResources-87:/values-en-rCA/values-en-rCA.xml",
+            "outputFile": "com.neonscan.app-mergeDebugResources-90:/values-en-rCA/values-en-rCA.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\f545d5fbbfe1e2b46fa772ea43a819f8\\transformed\\ui-release\\res\\values-en-rCA\\values-en-rCA.xml",

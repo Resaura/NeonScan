@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.neonscan.app-mergeDebugResources-87:/values-am/values-am.xml",
+            "outputFile": "com.neonscan.app-mergeDebugResources-90:/values-am/values-am.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\5d6d2dc7df33ef37bec5466a360be55c\\transformed\\browser-1.4.0\\res\\values-am\\values-am.xml",

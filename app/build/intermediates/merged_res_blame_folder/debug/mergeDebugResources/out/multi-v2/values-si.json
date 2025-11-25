@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.neonscan.app-mergeDebugResources-87:/values-si/values-si.xml",
+            "outputFile": "com.neonscan.app-mergeDebugResources-90:/values-si/values-si.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\ab29d36bb5834bed22467e2075494d1f\\transformed\\play-services-basement-18.4.0\\res\\values-si\\values.xml",

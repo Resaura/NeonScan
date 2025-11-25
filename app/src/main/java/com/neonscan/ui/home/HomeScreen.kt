@@ -44,11 +44,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.DialogNavigator
 import com.neonscan.data.local.DocumentEntity
 import com.neonscan.data.model.DocumentFormat
 import com.neonscan.data.repo.DocumentRepository
@@ -66,6 +66,7 @@ import com.neonscan.util.simpleDate
 fun HomeScreen(navController: NavController, repo: DocumentRepository) {
     val vm = viewModel<HomeViewModel>(factory = HomeViewModelFactory(repo))
     val docs by vm.docs.collectAsState()
+    val context = LocalContext.current
 
     Scaffold(
         containerColor = NeonBlack,
@@ -100,7 +101,7 @@ fun HomeScreen(navController: NavController, repo: DocumentRepository) {
                         onDelete = { vm.delete(doc) },
                         onShare = {
                             val file = java.io.File(doc.filePathPrimary)
-                            shareFile(navController.context, file)
+                            shareFile(context, file)
                         },
                         onRename = { newTitle -> vm.rename(doc, newTitle) }
                     )
@@ -191,5 +192,3 @@ private fun DocumentRow(
         )
     }
 }
-
-private val NavController.context get() = this.navigatorProvider.getNavigator(DialogNavigator::class.java).context

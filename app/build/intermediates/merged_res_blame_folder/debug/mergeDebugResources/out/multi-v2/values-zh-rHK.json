@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.neonscan.app-mergeDebugResources-87:/values-zh-rHK/values-zh-rHK.xml",
+            "outputFile": "com.neonscan.app-mergeDebugResources-90:/values-zh-rHK/values-zh-rHK.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Administrateur\\.gradle\\caches\\transforms-4\\29a9e05bd658fa32b12f64e47fa406a7\\transformed\\foundation-release\\res\\values-zh-rHK\\values-zh-rHK.xml",

@@ -112,6 +112,9 @@ MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] C:\Users\Adm
 MERGED from [androidx.core:core-ktx:1.13.1] C:\Users\Administrateur\.gradle\caches\transforms-4\4d02e30490322ef62f858cd23c955e0c\transformed\core-ktx-1.13.1\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\Administrateur\.gradle\caches\transforms-4\4788975f67aafeb5b0c0cc57fe2156a0\transformed\room-runtime-2.6.1\AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.room:room-ktx:2.6.1] C:\Users\Administrateur\.gradle\caches\transforms-4\949254b4eb6114af65d77d46596112a0\transformed\room-ktx-2.6.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\f97f0f1223f38320c9065b3d5a60a5c3\transformed\datastore-core-release\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.datastore:datastore-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\9d77f2b25fc358f48df25375c20825b7\transformed\datastore-release\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\c5795451b8ab15df79cb21c64274bd34\transformed\datastore-preferences-release\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.0-alpha02] C:\Users\Administrateur\.gradle\caches\transforms-4\28d946b9b6c101516e25edf4e593b3d4\transformed\runtime-saveable-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.runtime:runtime-android:1.7.0-alpha02] C:\Users\Administrateur\.gradle\caches\transforms-4\bedd95a2dd9d29cef192ddf958b1c091\transformed\runtime-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\Administrateur\.gradle\caches\transforms-4\a006706b13a491ea93eb1d0fa22b77f6\transformed\annotation-experimental-1.4.0\AndroidManifest.xml:2:1-7:12
@@ -475,6 +478,12 @@ MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\Administrateur\.gradle\c
 MERGED from [androidx.room:room-runtime:2.6.1] C:\Users\Administrateur\.gradle\caches\transforms-4\4788975f67aafeb5b0c0cc57fe2156a0\transformed\room-runtime-2.6.1\AndroidManifest.xml:21:5-44
 MERGED from [androidx.room:room-ktx:2.6.1] C:\Users\Administrateur\.gradle\caches\transforms-4\949254b4eb6114af65d77d46596112a0\transformed\room-ktx-2.6.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.room:room-ktx:2.6.1] C:\Users\Administrateur\.gradle\caches\transforms-4\949254b4eb6114af65d77d46596112a0\transformed\room-ktx-2.6.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\f97f0f1223f38320c9065b3d5a60a5c3\transformed\datastore-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-core-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\f97f0f1223f38320c9065b3d5a60a5c3\transformed\datastore-core-release\AndroidManifest.xml:5:5-44
+MERGED from [androidx.datastore:datastore-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\9d77f2b25fc358f48df25375c20825b7\transformed\datastore-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\9d77f2b25fc358f48df25375c20825b7\transformed\datastore-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\c5795451b8ab15df79cb21c64274bd34\transformed\datastore-preferences-release\AndroidManifest.xml:20:5-44
+MERGED from [androidx.datastore:datastore-preferences-android:1.1.1] C:\Users\Administrateur\.gradle\caches\transforms-4\c5795451b8ab15df79cb21c64274bd34\transformed\datastore-preferences-release\AndroidManifest.xml:20:5-44
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.0-alpha02] C:\Users\Administrateur\.gradle\caches\transforms-4\28d946b9b6c101516e25edf4e593b3d4\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.0-alpha02] C:\Users\Administrateur\.gradle\caches\transforms-4\28d946b9b6c101516e25edf4e593b3d4\transformed\runtime-saveable-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.runtime:runtime-android:1.7.0-alpha02] C:\Users\Administrateur\.gradle\caches\transforms-4\bedd95a2dd9d29cef192ddf958b1c091\transformed\runtime-release\AndroidManifest.xml:5:5-44
