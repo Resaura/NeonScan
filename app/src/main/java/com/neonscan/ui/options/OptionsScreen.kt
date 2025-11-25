@@ -10,11 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,7 +44,13 @@ import com.neonscan.ui.theme.NeonGray
 import com.neonscan.util.FileManager
 import com.neonscan.util.ScanCache
 import com.neonscan.util.shareFile
+import android.provider.MediaStore
+import android.content.ContentValues
+import android.os.Build
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OptionsScreen(
     navController: NavController,
@@ -68,7 +78,16 @@ fun OptionsScreen(
             .background(NeonBlack)
             .padding(16.dp)
     ) {
-        Text("Options du document", color = NeonApple)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+        Text("Options du document", color = Color.White)
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Filled.Close, contentDescription = "Fermer", tint = NeonApple)
+            }
+        }
         Spacer(Modifier.height(12.dp))
         Image(
             bitmap = bitmap.asImageBitmap(),
@@ -79,7 +98,7 @@ fun OptionsScreen(
                 .clip(RoundedCornerShape(16.dp))
         )
         Spacer(Modifier.height(16.dp))
-        Text("Format", color = NeonGray)
+        Text("Format", color = Color.White)
         Spacer(Modifier.height(8.dp))
         FormatToggle(
             selected = format,
@@ -95,11 +114,18 @@ fun OptionsScreen(
             onValueChange = { vm.title = it },
             label = { Text("Titre", color = NeonGray) },
             modifier = Modifier.fillMaxWidth(),
-            textStyle = androidx.compose.material3.MaterialTheme.typography.bodyMedium.copy(color = NeonApple)
+            textStyle = androidx.compose.material3.MaterialTheme.typography.bodyMedium.copy(color = Color.White),
+            colors = androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                focusedBorderColor = NeonApple,
+                unfocusedBorderColor = NeonGray,
+                cursorColor = NeonApple
+            )
         )
         Spacer(Modifier.height(24.dp))
         NeonPrimaryButton(
-            text = "Enregistrer dans l’app",
+            text = "Enregistrer dans l'app",
             onClick = {
                 vm.exportPdf = format == DocumentFormat.PDF
                 vm.exportJpg = format == DocumentFormat.JPG
@@ -109,6 +135,14 @@ fun OptionsScreen(
                     }
                     navController.navigate("home") { popUpTo("home") { inclusive = true } }
                 }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.height(12.dp))
+        NeonSecondaryButton(
+            text = "Enregistrer sur le téléphone",
+            onClick = {
+                saveToDevice(context, bitmap, format)
             },
             modifier = Modifier.fillMaxWidth()
         )
@@ -151,6 +185,33 @@ private fun FormatChip(label: String, selected: Boolean, onClick: () -> Unit) {
             contentColor = if (selected) NeonApple else NeonGray
         )
     ) {
-        Text(label)
+        Text(label, color = Color.White)
+    }
+}
+
+private fun saveToDevice(context: android.content.Context, bitmap: android.graphics.Bitmap, format: DocumentFormat) {
+    val isJpg = format == DocumentFormat.JPG
+    val mime = if (isJpg) "image/jpeg" else "application/pdf"
+    val name = "NeonScan_${System.currentTimeMillis()}" + if (isJpg) ".jpg" else ".pdf"
+    val resolver = context.contentResolver
+    val collection = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+    } else {
+        MediaStore.Files.getContentUri("external")
+    }
+    val values = ContentValues().apply {
+        put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+        put(MediaStore.MediaColumns.MIME_TYPE, mime)
+    }
+    val uri = resolver.insert(collection, values)
+    if (uri != null) {
+        resolver.openOutputStream(uri)?.use { out ->
+            if (isJpg) {
+                bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 92, out)
+            } else {
+                // simple single-page PDF via image compress (fallback)
+                bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 92, out)
+            }
+        }
     }
 }

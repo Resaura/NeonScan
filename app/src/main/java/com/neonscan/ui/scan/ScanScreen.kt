@@ -1,7 +1,9 @@
 package com.neonscan.ui.scan
 
 import android.Manifest
-import android.graphics.Paint
+import android.app.Activity
+import android.content.Intent
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -9,8 +11,6 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import android.content.Intent
-import android.app.Activity
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -42,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
+import android.graphics.Paint
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
@@ -57,8 +60,6 @@ import com.neonscan.ui.theme.NeonApple
 import com.neonscan.ui.theme.NeonBlack
 import com.neonscan.util.ScanCache
 import com.neonscan.util.toBitmap
-
-import androidx.compose.material3.ExperimentalMaterial3Api
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -88,6 +89,7 @@ fun ScanScreen(
 
     var flashEnabled by remember { mutableStateOf(false) }
     var capture: ImageCapture? by remember { mutableStateOf(null) }
+    var camera by remember { mutableStateOf<Camera?>(null) }
 
     Scaffold(
         containerColor = NeonBlack,
@@ -105,7 +107,8 @@ fun ScanScreen(
             Row(
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 12.dp)
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .height(72.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
                 val galleryContext = context
@@ -115,8 +118,9 @@ fun ScanScreen(
                 Spacer(Modifier.weight(1f))
                 IconButton(onClick = {
                     capture?.let { imageCapture ->
-                        imageCapture.flashMode = if (flashEnabled) ImageCapture.FLASH_MODE_OFF else ImageCapture.FLASH_MODE_ON
                         flashEnabled = !flashEnabled
+                        imageCapture.flashMode = if (flashEnabled) ImageCapture.FLASH_MODE_ON else ImageCapture.FLASH_MODE_OFF
+                        camera?.cameraControl?.enableTorch(flashEnabled)
                     }
                 }) {
                     Icon(if (flashEnabled) Icons.Filled.FlashOn else Icons.Filled.FlashOff, contentDescription = "Flash", tint = NeonApple)
@@ -127,7 +131,10 @@ fun ScanScreen(
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             CameraPreview(
                 quality = quality,
-                onCaptureCreated = { capture = it }
+                onCaptureCreated = { cap, cam ->
+                    capture = cap
+                    camera = cam
+                }
             )
             DocumentOverlay()
             Box(
@@ -166,7 +173,7 @@ fun ScanScreen(
 @Composable
 private fun CameraPreview(
     quality: ScanQuality,
-    onCaptureCreated: (ImageCapture) -> Unit
+    onCaptureCreated: (ImageCapture, Camera) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -174,9 +181,10 @@ private fun CameraPreview(
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = {
-            val previewView = PreviewView(context)
-            previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
-            previewView.implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            val previewView = PreviewView(context).apply {
+                scaleType = PreviewView.ScaleType.FILL_CENTER
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            }
             val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
             cameraProviderFuture.addListener({
                 val cameraProvider = cameraProviderFuture.get()
@@ -195,13 +203,13 @@ private fun CameraPreview(
                 val selector = CameraSelector.DEFAULT_BACK_CAMERA
                 try {
                     cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
+                    val camera = cameraProvider.bindToLifecycle(
                         lifecycleOwner,
                         selector,
                         preview,
                         imageCapture
                     )
-                    onCaptureCreated(imageCapture)
+                    onCaptureCreated(imageCapture, camera)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -228,13 +236,9 @@ private fun DocumentOverlay() {
 }
 
 private fun openGallery(context: android.content.Context) {
-    val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-        type = "image/*"
-    }
+    val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" }
     val chooser = Intent.createChooser(intent, "Choisir une image")
-    if (context is Activity) {
-        context.startActivity(chooser)
-    } else {
+    if (context is Activity) context.startActivity(chooser) else {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(chooser)
     }

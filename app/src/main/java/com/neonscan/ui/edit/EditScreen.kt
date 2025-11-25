@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -40,12 +42,14 @@ import com.neonscan.util.ImageFilters
 import com.neonscan.util.ScanCache
 import com.neonscan.util.rotate90
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EditScreen(
     navController: NavController,
     vm: EditViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
 ) {
     val original = ScanCache.lastBitmap ?: return
+    var currentBitmap by remember { mutableStateOf(original) }
     var preview by remember { mutableStateOf(original) }
     val scroll = rememberScrollState()
 
@@ -66,21 +70,31 @@ fun EditScreen(
                 .clip(MaterialTheme.shapes.medium)
         )
         Spacer(Modifier.height(12.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             ScanFilter.values().forEach { filter ->
                 NeonSecondaryButton(
                     text = filterLabel(filter),
                     onClick = {
                         vm.filter = filter
-                        preview = ImageFilters.apply(filter, original)
+                        preview = ImageFilters.apply(filter, currentBitmap)
                     },
-                    modifier = Modifier.weight(1f),
-                    enabled = true
+                    enabled = true,
+                    maxLines = 2,
+                    selected = vm.filter == filter
                 )
             }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
             IconButtonLarge {
                 vm.rotate()
-                preview = preview.rotate90()
+                currentBitmap = currentBitmap.rotate90()
+                preview = ImageFilters.apply(vm.filter, currentBitmap)
             }
         }
         Spacer(Modifier.height(12.dp))

@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neonscan.ui.theme.NeonApple
 import com.neonscan.ui.theme.NeonAppleDim
@@ -42,19 +43,26 @@ fun NeonPrimaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Mo
 }
 
 @Composable
-fun NeonSecondaryButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+fun NeonSecondaryButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    maxLines: Int = 1,
+    selected: Boolean = false
+) {
     OutlinedButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        border = BorderStroke(1.4.dp, NeonApple),
+        border = BorderStroke(1.4.dp, if (selected) NeonApple else NeonAppleDim),
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Color.Transparent,
-            contentColor = NeonApple,
+            containerColor = if (selected) NeonAppleDim.copy(alpha = 0.25f) else Color.Transparent,
+            contentColor = if (selected) NeonApple else NeonGray,
             disabledContentColor = NeonApple.copy(alpha = 0.4f)
         ),
         shape = RoundedCornerShape(18.dp)
-    ) { Text(text) }
+    ) { Text(text, maxLines = maxLines, overflow = TextOverflow.Ellipsis) }
 }
 
 @Composable
