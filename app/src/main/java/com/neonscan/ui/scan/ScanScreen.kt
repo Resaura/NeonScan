@@ -74,6 +74,7 @@ fun ScanScreen(
     val context = LocalContext.current
     val mainExecutor = remember { ContextCompat.getMainExecutor(context) }
     var quality by remember { mutableStateOf(ScanQuality.STANDARD) }
+    var normalizedCorners by remember { mutableStateOf(defaultFrame()) }
     LaunchedEffect(Unit) {
         settingsRepository.settings.collect { settings ->
             quality = settings.quality
@@ -137,7 +138,7 @@ fun ScanScreen(
                     camera = cam
                 }
             )
-            DocumentOverlay()
+            DocumentOverlay(normalizedCorners)
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.BottomCenter
@@ -154,6 +155,7 @@ fun ScanScreen(
                                     if (bmp != null) {
                                         vm.onShot(bmp)
                                         ScanCache.lastBitmap = bmp
+                                        ScanCache.lastCorners = normalizedCorners.ifEmpty { defaultFrame() }
                                         navController.navigate("edit")
                                     }
                                     image.close()
@@ -170,6 +172,13 @@ fun ScanScreen(
         }
     }
 }
+
+private fun defaultFrame(): List<Pair<Float, Float>> = listOf(
+    0.2f to 0.25f,
+    0.8f to 0.25f,
+    0.8f to 0.75f,
+    0.2f to 0.75f
+)
 
 @Composable
 private fun CameraPreview(
@@ -221,31 +230,39 @@ private fun CameraPreview(
 }
 
 @Composable
-private fun DocumentOverlay() {
+private fun DocumentOverlay(corners: List<Pair<Float, Float>>) {
     Canvas(modifier = Modifier.fillMaxSize()) {
-        // default guide rectangle centered
-        val rectWidth = size.width * 0.8f
-        val rectHeight = size.height * 0.5f
-        val left = (size.width - rectWidth) / 2
-        val top = (size.height - rectHeight) / 2
-        val right = left + rectWidth
-        val bottom = top + rectHeight
-        drawRect(
-            color = NeonApple,
-            topLeft = Offset(left, top),
-            size = androidx.compose.ui.geometry.Size(rectWidth, rectHeight),
-            style = Stroke(width = 3.dp.toPx())
-        )
-        val paint = Paint().apply {
-            color = android.graphics.Color.LTGRAY
-            textSize = 32f
+        if (corners.size >= 4) {
+            val points = corners.map { (nx, ny) -> Offset(nx * size.width, ny * size.height) }
+            val path = androidx.compose.ui.graphics.Path().apply {
+                moveTo(points[0].x, points[0].y)
+                points.drop(1).forEach { lineTo(it.x, it.y) }
+                close()
+            }
+            drawPath(path = path, color = NeonApple, style = Stroke(width = 4.dp.toPx()))
+        } else {
+            // default guide rectangle centered
+            val rectWidth = size.width * 0.8f
+            val rectHeight = size.height * 0.5f
+            val left = (size.width - rectWidth) / 2
+            val top = (size.height - rectHeight) / 2
+            drawRect(
+                color = NeonApple,
+                topLeft = Offset(left, top),
+                size = androidx.compose.ui.geometry.Size(rectWidth, rectHeight),
+                style = Stroke(width = 3.dp.toPx())
+            )
+            val paint = Paint().apply {
+                color = android.graphics.Color.LTGRAY
+                textSize = 32f
+            }
+            drawContext.canvas.nativeCanvas.drawText(
+                "Cadrez le document",
+                left + 20f,
+                top - 20f,
+                paint
+            )
         }
-        drawContext.canvas.nativeCanvas.drawText(
-            "Cadrez le document",
-            left + 20f,
-            top - 20f,
-            paint
-        )
     }
 }
 
